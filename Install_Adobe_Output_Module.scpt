@@ -1,7 +1,7 @@
 (*
 AOM(Adobe Output Module)インストーラー
 20151219　初回作成
-
+20151221 一部修正
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
 複数の人が同じ機器を利用する場合
@@ -21,7 +21,8 @@ set theTrashDir to ("/tmp/" & theNowTime) as text
 -----テンポラリーフォルダを作成
 try
 	set theCommand to ("mkdir -pv " & theTrashDir) as text
-	set theTmpPath to (do shell script theCommand) as text
+	do shell script theCommand
+	set theTmpPath to theTrashDir as text
 	delay 1
 on error
 	return "テンポラリフォルダ作成でエラーが発生しました"
