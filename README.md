@@ -1,6 +1,10 @@
 # Install_Adobe_Output_Module.scpt
+
 AOM(Adobe Output Module)インストーラー
+
 20151219　初回作成
+
+20151224 ログ表示部修正
 
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
