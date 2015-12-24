@@ -2,6 +2,7 @@
 AOM(Adobe Output Module)インストーラー
 20151219　初回作成
 20151221 一部修正
+20151224 ログ表示部修正
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
 複数の人が同じ機器を利用する場合
@@ -10,7 +11,22 @@ AOM(Adobe Output Module)のMac版は
 トラブル防止用に作成した
 業務用に作成した物を可読性を配慮して作り直した
 アクセス権でstaffにフルアクセス権を付けている（ここは好みの問題）
+Bridge Help / Install Adobe Output Module 
+https://helpx.adobe.com/bridge/kb/install-output-module-bridge-cc.html
+詳しくはこちら
+http://force4u.cocolog-nifty.com/skywalker/2015/12/aomadobe-output.html
 *)
+
+----ログを表示
+tell application "AppleScript Editor"
+	activate
+	try
+		tell application "System Events" to keystroke "3" using {command down}
+	end try
+	try
+		tell application "System Events" to keystroke "l" using {option down, command down}
+	end try
+end tell
 
 ---日付けと時間からテンポラリー用のフォルダ名を作成
 set theNowTime to (my doDateAndTIme(current date)) as text
