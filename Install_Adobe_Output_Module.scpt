@@ -3,6 +3,8 @@ AOM(Adobe Output Module)インストーラー
 20151219　初回作成
 20151221 一部修正
 20151224 ログ表示部修正
+20151225　sudoの一部誤り訂正
+
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
 複数の人が同じ機器を利用する場合
@@ -63,7 +65,7 @@ end try
 -----インストール先のフォルダを確保
 try
 	set theCommand to ("sudo mkdir -p '/Library/Application Support/Adobe/Bridge CC Extensions'") as text
-	do shell script theCommand
+	do shell script theCommand with administrator privileges
 	set theCommand to ("sudo mkdir -p '/Library/Application Support/Adobe/Bridge CC Extensions/Workspaces'") as text
 	do shell script theCommand with administrator privileges
 on error
