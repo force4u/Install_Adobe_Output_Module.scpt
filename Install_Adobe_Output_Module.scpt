@@ -4,6 +4,7 @@ AOM(Adobe Output Module)インストーラー
 20151221 一部修正
 20151224 ログ表示部修正
 20151225　sudoの一部誤り訂正
+20160510　Adobeのサーバー側のリダイレクトに対応
 
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
@@ -48,7 +49,7 @@ end try
 
 -----ファイルをダウンロード
 try
-	set theCommand to ("curl -o '" & theTmpPath & "/AOM_Mac_New.zip' 'https://helpx.adobe.com/content/help/en/bridge/kb/install-output-module-bridge-cc/_jcr_content/main-pars/download_1/file.res/AOM_Mac_New.zip'") as text
+	set theCommand to ("curl -L -o '" & theTmpPath & "/AOM_Mac_New.zip' 'https://helpx.adobe.com/content/help/en/bridge/kb/install-output-module-bridge-cc/_jcr_content/main-pars/download_1/file.res/AOM_Mac_New.zip'") as text
 	do shell script theCommand
 	delay 1
 on error
