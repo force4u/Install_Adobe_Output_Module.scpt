@@ -6,7 +6,7 @@ AOM(Adobe Output Module)インストーラー
 20151221 一部修正
 20151224 ログ表示部修正
 20151225　sudoの一部誤り訂正
-
+20160510　Adobeのサーバー側のリダイレクトに対応
 
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
