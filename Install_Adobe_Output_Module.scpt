@@ -5,6 +5,20 @@ AOM(Adobe Output Module)インストーラー
 20151224 ログ表示部修正
 20151225　sudoの一部誤り訂正
 20160510　Adobeのサーバー側のリダイレクトに対応
+20160517　キャッシュの削除を含めて初期化する処理に変更
+20160529 Reset_Adobe_Output_Module_BridgeCC.scptに名称変更
+20160831	ダウンロードファイルの変更に対応
+【ポイント】
+一部の環境（Bridge CS6版とBridge CC版を併用する方）で発生する
+出力パネルの『I/oエラー』が発生する場合
+このスクリプトを実行すると解決する事があります。（必ずではないですが…）
+
+【留意事項】
+一部初期設定等をリセットします。
+設定等をリセットしないインストールだけの場合は
+こちら
+http://force4u.cocolog-nifty.com/skywalker/2016/05/bridgeccaomadob.html
+を利用してください
 
 AOM(Adobe Output Module)のMac版は
 解凍時のアクセス権の影響で
@@ -15,9 +29,14 @@ AOM(Adobe Output Module)のMac版は
 業務用に作成した物を可読性を配慮して作り直した
 アクセス権でstaffにフルアクセス権を付けている（ここは好みの問題）
 Bridge Help / Install Adobe Output Module 
+Install the Adobe Output Module for Bridge CC 6.2
 https://helpx.adobe.com/bridge/kb/install-output-module-bridge-cc.html
 詳しくはこちら
 http://force4u.cocolog-nifty.com/skywalker/2015/12/aomadobe-output.html
+
+AdobeOutputModule.jsx
+DateTime: 2008/04/10
+Adobe Output Module 4.0
 *)
 
 ----ログを表示
@@ -49,7 +68,10 @@ end try
 
 -----ファイルをダウンロード
 try
-	set theCommand to ("curl -L -o '" & theTmpPath & "/AOM_Mac_New.zip' 'https://helpx.adobe.com/content/help/en/bridge/kb/install-output-module-bridge-cc/_jcr_content/main-pars/download_1/file.res/AOM_Mac_New.zip'") as text
+	---旧URL
+	---set theCommand to ("curl -L -o '" & theTmpPath & "/AOM_Mac_New.zip' 'https://helpx.adobe.com/content/help/en/bridge/kb/install-output-module-bridge-cc/_jcr_content/main-pars/download_1/file.res/AOM_Mac_New.zip'") as text
+	---20160831新URL
+	set theCommand to ("curl -L -o '" & theTmpPath & "/AOM_Mac_New.zip' 'https://helpx.adobe.com/content/help/en/bridge/kb/install-output-module-bridge-cc/_jcr_content/main-pars/download_section_393125832/download-3/file.res/AOM_Mac_New.zip'") as text
 	do shell script theCommand
 	delay 1
 on error
@@ -112,15 +134,94 @@ on error
 	return "アクセス権修正でエラーが発生しました"
 end try
 
------キャッシュクリア
+-----Workspacesキャッシュクリア
 try
 	set theUserBridgeDir to path to application support folder from user domain
 	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
-	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe/Bridge CC/Workspaces/!!-$$$AdobeOutputModule.workspace' '" & theTmpPath & "'") as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/Support'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe/Bridge CC' '" & theTmpPath & "/Support'") as text
 	do shell script theCommand
 on error
-	-----ここはエラー制御なし
+	log "Workspacesキャッシュがありませんでした"
 end try
+
+-----Commonクリア
+try
+	set theUserBridgeDir to path to application support folder from user domain
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/Common'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe/Common' '" & theTmpPath & "/Common'") as text
+	do shell script theCommand
+on error
+	log "Commonキャッシュがありませんでした"
+end try
+
+-----Preferencesクリア
+try
+	set theUserBridgeDir to path to preferences folder from user domain
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/Preferences'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe/Bridge' '" & theTmpPath & "/Preferences'") as text
+	do shell script theCommand
+on error
+	log "Preferencesディレクトリがありませんでした"
+end try
+
+-----plistクリア
+try
+	set theUserBridgeDir to path to preferences folder from user domain
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/Preferences'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "com.adobe.bridge6.plist' '" & theTmpPath & "/Preferences'") as text
+	do shell script theCommand
+on error
+	log "plistがありませんでした"
+end try
+
+
+
+-----Cachesクリア
+try
+	set theUserBridgeDir to path to library folder from user domain
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/Caches'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Caches/Adobe' '" & theTmpPath & "/Caches'") as text
+	do shell script theCommand
+on error
+	log "Cachesがありませんでした"
+end try
+
+-----temporary itemsクリア
+try
+	set theUserBridgeDir to path to temporary items
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/TemporaryItems'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe' '" & theTmpPath & "/TemporaryItems'") as text
+	do shell script theCommand
+on error
+	log "temporary Adobeがありませんでした"
+end try
+
+
+-----temporary itemsクリア
+try
+	set theUserBridgeDir to path to temporary items
+	set theUserBridgeDir to (POSIX path of theUserBridgeDir) as text
+	set theCommand to ("mkdir -p   '" & theTmpPath & "/TemporaryItems'") as text
+	do shell script theCommand
+	set theCommand to ("mv -f  '" & theUserBridgeDir & "Adobe Output Module' '" & theTmpPath & "/TemporaryItems'") as text
+	do shell script theCommand
+on error
+	log "temporary　Adobe Output Moduleがありませんでした"
+end try
+
+
 
 
 return "AOM(Adobe Output Module)のインストールが終了しました\rブリッジを起動させて出力パネルを確認してください\rテンポラリフォルダの中身は次回起動時に消去されます"
